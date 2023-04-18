@@ -1,0 +1,4 @@
+*.tgz
+.vscode/
+dist/
+node_modules/

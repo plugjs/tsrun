@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    // Setup our compilation type
+    "lib": [ "esnext", "webworker" ],
+    "target": "esnext",
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "types": [ "node" ],
+    "esModuleInterop": true,
+
+    // Directories and output
+    "rootDir": "src",
+    "outDir": "dist",
+    "sourceMap": false,
+    "inlineSourceMap": false,
+
+    // Ultra strict
+    "strict": true,
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noUncheckedIndexedAccess": true,
+    "verbatimModuleSyntax": true,
+  },
+  "include": [
+    "src/*.mts",
+    "types/*.d.ts",
+  ]
+}
