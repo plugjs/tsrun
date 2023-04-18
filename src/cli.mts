@@ -5,16 +5,24 @@ import _module from 'node:module'
 import _url from 'node:url'
 import _util from 'node:util'
 
+import _yargs from './parser.mjs'
+
 /* ========================================================================== *
  * PRETTY COLORS                                                              *
  * ========================================================================== */
 
-export const $rst = process.stdout.isTTY ? '\u001b[0m' : '' // reset all colors to default
-export const $und = process.stdout.isTTY ? '\u001b[4m' : '' // underline on
-export const $gry = process.stdout.isTTY ? '\u001b[38;5;240m' : '' // somewhat gray
-export const $blu = process.stdout.isTTY ? '\u001b[38;5;69m' : '' // brighter blue
-export const $wht = process.stdout.isTTY ? '\u001b[1;38;5;255m' : '' // full-bright white
-export const $tsk = process.stdout.isTTY ? '\u001b[38;5;141m' : '' // the color for tasks (purple)
+/** Reset all colors to default */
+export const $rst = process.stdout.isTTY ? '\u001b[0m' : ''
+/** Set _underline_ on */
+export const $und = process.stdout.isTTY ? '\u001b[4m' : ''
+/** Set _somewhat gray_ on */
+export const $gry = process.stdout.isTTY ? '\u001b[38;5;240m' : ''
+/** Set _brighter blue_ on */
+export const $blu = process.stdout.isTTY ? '\u001b[38;5;69m' : ''
+/** Set _full bright white_ on */
+export const $wht = process.stdout.isTTY ? '\u001b[1;38;5;255m' : ''
+/** Set _purplish indigo_ on (the color of tasks) */
+export const $tsk = process.stdout.isTTY ? '\u001b[38;5;141m' : ''
 
 /* ========================================================================== *
  * TS LOADER FORCE TYPE                                                       *
@@ -34,8 +42,11 @@ function forceType(type: 'commonjs' | 'module'): void {
 
 
 /* ========================================================================== *
- * FILES UTILITIES                                                            *
+ * UTILITIES                                                                  *
  * ========================================================================== */
+
+/* Re-export `yargs-parser` */
+export const yargsParser = _yargs
 
 /* Returns a boolean indicating whether the specified file exists or not */
 export function isFile(path: string): boolean {
@@ -59,6 +70,17 @@ export function isDirectory(path: string): boolean {
 /* ========================================================================== *
  * MAIN ENTRY POINT                                                           *
  * ========================================================================== */
+
+/**
+ * Wrap around the `main` process of a CLI.
+ *
+ * This function must be invoked with a script URL (the `import.meta.url`
+ * variable of the script being executed) and a callback, which will be invoked
+ * once the proper environment for TypeScript has been setup.
+ *
+ * The callback _might_ return a promise (can be asynchronous) which will be
+ * awaited for potential rejections.
+ */
 export function main(
     scriptUrl: string,
     callback: (args: string[]) => void | Promise<void>,
