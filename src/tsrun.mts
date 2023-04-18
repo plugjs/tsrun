@@ -50,6 +50,7 @@ main(import.meta.url, (args: string[]): void | Promise<void> => {
   const parsed = _yargs(args, {
     configuration: {
       'camel-case-expansion': false,
+      'halt-at-non-option': true,
       'strip-aliased': true,
       'strip-dashed': true,
     },
