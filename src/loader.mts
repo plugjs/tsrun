@@ -29,7 +29,6 @@ import _util from 'node:util'
 import _esbuild from 'esbuild'
 
 // Local imports
-import { isDirectory, isFile } from './cli.mjs'
 
 /* ========================================================================== *
  * DEBUGGING AND ERRORS                                                       *
@@ -208,6 +207,29 @@ function _esbTranpile(filename: string, type: Type): string {
 
   /* Done! */
   return result.code
+}
+
+
+/* ========================================================================== *
+ * UTILITIES                                                                  *
+ * ========================================================================== */
+
+/* Returns a boolean indicating whether the specified file exists or not */
+export function isFile(path: string): boolean {
+  try {
+    return _fs.statSync(path).isFile()
+  } catch (error) {
+    return false
+  }
+}
+
+/* Returns a boolean indicating whether the specified directory exists or not */
+export function isDirectory(path: string): boolean {
+  try {
+    return _fs.statSync(path).isDirectory()
+  } catch (error) {
+    return false
+  }
 }
 
 

@@ -1,28 +1,10 @@
 /* eslint-disable no-console */
 import _childProcess from 'node:child_process'
-import _fs from 'node:fs'
 import _module from 'node:module'
 import _url from 'node:url'
 import _util from 'node:util'
 
 import _yargs from './parser.mjs'
-
-/* ========================================================================== *
- * PRETTY COLORS                                                              *
- * ========================================================================== */
-
-/** Reset all colors to default */
-export const $rst = process.stdout.isTTY ? '\u001b[0m' : ''
-/** Set _underline_ on */
-export const $und = process.stdout.isTTY ? '\u001b[4m' : ''
-/** Set _somewhat gray_ on */
-export const $gry = process.stdout.isTTY ? '\u001b[38;5;240m' : ''
-/** Set _brighter blue_ on */
-export const $blu = process.stdout.isTTY ? '\u001b[38;5;69m' : ''
-/** Set _full bright white_ on */
-export const $wht = process.stdout.isTTY ? '\u001b[1;38;5;255m' : ''
-/** Set _purplish indigo_ on (the color of tasks) */
-export const $tsk = process.stdout.isTTY ? '\u001b[38;5;141m' : ''
 
 /* ========================================================================== *
  * TS LOADER FORCE TYPE                                                       *
@@ -40,36 +22,12 @@ function forceType(type: 'commonjs' | 'module'): void {
   ;(globalThis as any)[tsLoaderMarker] = type
 }
 
-
 /* ========================================================================== *
- * UTILITIES                                                                  *
+ * ESPORTS                                                                    *
  * ========================================================================== */
 
-/* Re-export `yargs-parser` */
+/** Bundled-in `yargs-parser` */
 export const yargsParser = _yargs
-
-/* Returns a boolean indicating whether the specified file exists or not */
-export function isFile(path: string): boolean {
-  try {
-    return _fs.statSync(path).isFile()
-  } catch (error) {
-    return false
-  }
-}
-
-/* Returns a boolean indicating whether the specified directory exists or not */
-export function isDirectory(path: string): boolean {
-  try {
-    return _fs.statSync(path).isDirectory()
-  } catch (error) {
-    return false
-  }
-}
-
-
-/* ========================================================================== *
- * MAIN ENTRY POINT                                                           *
- * ========================================================================== */
 
 /**
  * Wrap around the `main` process of a CLI.
@@ -100,13 +58,13 @@ export function main(
 
   /* If both source maps and typescript are on, run! */
   if (sourceMapsEnabled && typeScriptEnabled) {
-    const args = process.argv.slice(2).filter((arg: string): string | void => {
+    const args = process.argv.slice(2).filter((arg: string): boolean => {
       if (arg === '--force-esm') {
-        return forceType('module')
+        return (forceType('module'), false)
       } else if (arg === '--force-cjs') {
-        return forceType('commonjs')
+        return (forceType('commonjs'), false)
       } else {
-        return arg
+        return true
       }
     })
 

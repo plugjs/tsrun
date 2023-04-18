@@ -8,7 +8,18 @@ import _module from 'node:module'
 
 import _yargs from 'yargs-parser'
 
-import { $blu, $gry, $rst, $und, $wht, main } from './cli.mjs'
+import { main } from './cli.mjs'
+
+/** Reset all colors to default */
+const $rst = process.stdout.isTTY ? '\u001b[0m' : ''
+/** Set _underline_ on */
+const $und = process.stdout.isTTY ? '\u001b[4m' : ''
+/** Set _somewhat gray_ on */
+const $gry = process.stdout.isTTY ? '\u001b[38;5;240m' : ''
+/** Set _brighter blue_ on */
+const $blu = process.stdout.isTTY ? '\u001b[38;5;69m' : ''
+/** Set _full bright white_ on */
+const $wht = process.stdout.isTTY ? '\u001b[1;38;5;255m' : ''
 
 /** Version injected by esbuild */
 declare const __version: string
