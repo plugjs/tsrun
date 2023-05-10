@@ -180,28 +180,15 @@ function _esbTranpile(filename: string, type: Type): string {
     logLevel: 'silent', // catching those in our _esbReport below
     target: `node${process.versions['node']}`, // target _this_ version
     define: { __fileurl }, // from "globals.d.ts"
-    banner: '', // empty banner, maybe populated below
   }
 
   /* Emit a line on the console when loading in debug mode */
   if (_debug) {
     if (format === 'esm') {
-      options.banner += `;(await import('node:util')).debuglog('plug:ts-loader')('[esm] Loaded "%s"', ${__fileurl});`
+      options.banner = `;(await import('node:util')).debuglog('plug:ts-loader')('[esm] Loaded "%s"', ${__fileurl});`
     } else if (format === 'cjs') {
-      options.banner += `;require('node:util').debuglog('plug:ts-loader')('[cjs] Loaded "%s"', ${__fileurl});`
+      options.banner = `;require('node:util').debuglog('plug:ts-loader')('[cjs] Loaded "%s"', ${__fileurl});`
     }
-  }
-
-  /* Add our "__filename" and "__dirname" helper for ESM modules */
-  if (type === ESM) {
-    options.define!['__filename'] = '__$$_esm_paths_helper.__filename'
-    options.define!['__dirname'] = '__$$_esm_paths_helper.__dirname'
-    options.banner +=
-      ';const __$$_esm_paths_helper = await (async() => {' +
-        'const __filename = (await import("node:url")).fileURLToPath(import.meta.url);' +
-        'const __dirname = (await import("node:path")).dirname(__filename);' +
-        'return { __filename, __dirname };' +
-      '})();'
   }
 
   /* Transpile our TypeScript file into some JavaScript stuff */
