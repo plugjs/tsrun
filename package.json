@@ -1,6 +1,6 @@
 {
   "name": "@plugjs/tsrun",
-  "version": "0.4.24",
+  "version": "0.4.25",
   "type": "module",
   "module": "./dist/cli.mjs",
   "types": "./dist/cli.d.mts",
@@ -21,12 +21,12 @@
   "author": "Juit Developers <developers@juit.com>",
   "license": "Apache-2.0",
   "dependencies": {
-    "esbuild": "^0.19.4"
+    "esbuild": "^0.19.5"
   },
   "devDependencies": {
     "@plugjs/eslint-plugin": "^0.1.13",
     "@types/node": "<19",
-    "@types/yargs-parser": "^21.0.1",
+    "@types/yargs-parser": "^21.0.2",
     "eslint": "^8.51.0",
     "typescript": "^5.2.2",
     "yargs-parser": "^21.1.1"
