@@ -13,6 +13,7 @@
     "outDir": "dist",
     "sourceMap": false,
     "inlineSourceMap": false,
+    "noEmit": true,
 
     // Ultra strict
     "strict": true,
@@ -24,6 +25,7 @@
   },
   "include": [
     "src/*.mts",
-    "types/*.d.ts",
+    "src/*.cts",
+    "src/*.ts",
   ]
 }
