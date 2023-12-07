@@ -5,9 +5,33 @@ on:
     branches: [main]
 
 jobs:
-  release:
+  build:
+    strategy:
+      matrix:
+        version: [16, 18, 20]
+
     runs-on: ubuntu-latest
-    name: Release Package
+    name: Build Pull Request
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Setup NodeJS
+        uses: actions/setup-node@v3
+        with:
+          registry-url: https://registry.npmjs.org
+          node-version: ${{ matrix.version }}
+
+      - name: Build Package
+        run: |
+          npm clean-install
+          npm run build
+
+  publish:
+    runs-on: ubuntu-latest
+    name: Publish Package
+    needs: build
 
     steps:
       - name: Checkout Repository
@@ -19,7 +43,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           registry-url: https://registry.npmjs.org
-          node-version: 18.x
+          node-version: 20
 
       - name: Build Package
         run: |
