@@ -5,6 +5,10 @@ on:
 
 jobs:
   build:
+    strategy:
+      matrix:
+        version: [16, 18, 20]
+
     runs-on: ubuntu-latest
     name: Build Pull Request
 
@@ -16,7 +20,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           registry-url: https://registry.npmjs.org
-          node-version: 18.x
+          node-version: ${{ matrix.version }}
 
       - name: Build Package
         run: |
