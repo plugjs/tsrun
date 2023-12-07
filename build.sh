@@ -24,15 +24,26 @@ eslint 'src/**'
 
 # Compile our "ts-loader" loader and CLI
 echo -e '\033[38;5;69m*\033[0m Transpiling sources...'
-exec esbuild \
+esbuild \
 	--platform=node \
 	--format=esm \
 	--target=node18 \
 	--outdir=./dist \
-	--sourcemap=inline \
-	--sources-content=false \
 	--out-extension:.js=.mjs \
 	--external:esbuild \
 	--define:__version="'${VERSION}'" \
 	--bundle \
 		src/*.mts
+esbuild \
+	--platform=node \
+	--format=cjs \
+	--target=node18 \
+	--outdir=./dist \
+	--out-extension:.js=.cjs \
+	--external:esbuild \
+	--define:__version="'${VERSION}'" \
+	--bundle \
+		src/*.cts
+
+# Execute our minimal tests
+exec ./test.sh
