@@ -16,7 +16,8 @@
     "tsrun": "./dist/tsrun.mjs"
   },
   "scripts": {
-    "build": "./build.sh"
+    "build": "./build.sh",
+    "test": "./test.sh"
   },
   "author": "Juit Developers <developers@juit.com>",
   "license": "Apache-2.0",

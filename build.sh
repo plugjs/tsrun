@@ -44,3 +44,6 @@ esbuild \
 	--define:__version="'${VERSION}'" \
 	--bundle \
 		src/*.cts
+
+# Execute our minimal tests
+exec ./test.sh
