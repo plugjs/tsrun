@@ -1,6 +1,6 @@
 {
   "name": "@plugjs/tsrun",
-  "version": "0.5.19",
+  "version": "0.5.20",
   "type": "module",
   "module": "./dist/cli.mjs",
   "types": "./dist/cli.d.mts",
@@ -25,7 +25,7 @@
     "esbuild": "^0.21.3"
   },
   "devDependencies": {
-    "@plugjs/eslint-plugin": "^0.1.21",
+    "@plugjs/eslint-plugin": "^0.1.22",
     "@types/node": "<21",
     "@types/yargs-parser": "^21.0.3",
     "eslint": "<9",
