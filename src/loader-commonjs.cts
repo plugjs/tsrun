@@ -20,6 +20,7 @@ type ExtensionHandler = (module: NodeJS.Module, filename: string) => void
 
 /* Add the `_compile(...)` method to NodeJS' `Module` interface */
 declare global {
+  // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace NodeJS {
     interface Module {
       _compile: (contents: string, filename: string) => void
@@ -67,7 +68,6 @@ const loader: ExtensionHandler = (module, filename): void => {
   try {
     module._compile(source, filename)
   } catch (cause) {
-    // eslint-disable-next-line no-console
     console.error(`Error compiling module "${filename}"`, cause)
   }
 }
@@ -118,7 +118,7 @@ _module._resolveFilename = function(
         const result = _oldResolveFilename.call(this, tsrequest, parent, ...args)
         logMessage(CJS, `Resolution for "${request}" intercepted as "${tsrequest}`)
         return result
-      } catch (discard) {
+      } catch {
         throw error // throw the _original_ error in this case
       }
     }

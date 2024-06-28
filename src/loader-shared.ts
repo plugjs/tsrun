@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-function-type */
 /* ========================================================================== *
  * HACK BEYOND REDEMPTION: TRANSPILE .ts FILES (the esm loader)               *
  * -------------------------------------------------------------------------- *
@@ -205,7 +206,7 @@ export function esbTranpile(filename: string, type: Type): string {
 export function isFile(path: string): boolean {
   try {
     return _fs.statSync(path).isFile()
-  } catch (error) {
+  } catch {
     return false
   }
 }
@@ -214,7 +215,7 @@ export function isFile(path: string): boolean {
 export function isDirectory(path: string): boolean {
   try {
     return _fs.statSync(path).isDirectory()
-  } catch (error) {
+  } catch {
     return false
   }
 }

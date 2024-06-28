@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import _childProcess from 'node:child_process'
 import _module from 'node:module'
 import _url from 'node:url'
