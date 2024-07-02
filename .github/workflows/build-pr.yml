@@ -7,7 +7,7 @@ jobs:
   build:
     strategy:
       matrix:
-        version: [16, 18, 20]
+        version: [18, 20, 22]
 
     runs-on: ubuntu-latest
     name: Build Pull Request
