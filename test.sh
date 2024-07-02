@@ -52,4 +52,9 @@ _run "file://${BASE}.ts" ./test/forking.ts || FAIL=1
 _run "file://${BASE}.ts" --force-esm ./test/forking.ts || FAIL=1
 _run "${BASE}.ts"        --force-cjs ./test/forking.ts || FAIL=1
 
+echo -e '\033[38;5;69m*\033[0m Testing failing scripts...'
+_run "" ./test/fail.ts 2>/dev/null || FAIL=1
+_run "" --force-esm ./test/fail.ts 2>/dev/null || FAIL=1
+_run "" --force-cjs ./test/fail.ts 2>/dev/null || FAIL=1
+
 exit "${FAIL}"

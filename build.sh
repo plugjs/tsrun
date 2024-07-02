@@ -32,6 +32,7 @@ esbuild \
 	--out-extension:.js=.mjs \
 	--external:esbuild \
 	--define:__version="'${VERSION}'" \
+  --sourcemap \
 	--bundle \
 		src/*.mts
 esbuild \
@@ -42,8 +43,9 @@ esbuild \
 	--out-extension:.js=.cjs \
 	--external:esbuild \
 	--define:__version="'${VERSION}'" \
+  --sourcemap \
 	--bundle \
 		src/*.cts
 
 # Execute our minimal tests
-exec ./test.sh
+exec cov8 -m 0 ./test.sh
