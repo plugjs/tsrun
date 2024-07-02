@@ -14,7 +14,7 @@ _run() {
   EXPECTED="$1"
   shift
 
-  echo -e '  \033[38;5;240m*\033[0m' node ./dist/tsrun.mjs "${@}" > /dev/stderr
+  echo -e '  \033[38;5;240m*\033[0m' node ./dist/tsrun.mjs "${@}" 1>&2
   ACTUAL="$(node ./dist/tsrun.mjs "${@}")"
 
   if test "${EXPECTED}" != "${ACTUAL}" ; then
