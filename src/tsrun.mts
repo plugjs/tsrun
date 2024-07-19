@@ -149,6 +149,6 @@ main(import.meta.url, (args: string[]): void | Promise<void> => {
     // arguments, them simply import the script and let Node do its thing...
     _script = _path.resolve(process.cwd(), _script)
     process.argv = [ process.argv0, _script, ..._scriptArgs ]
-    import(_script)
+    return import(_script)
   }
 })
