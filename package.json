@@ -1,6 +1,6 @@
 {
   "name": "@plugjs/tsrun",
-  "version": "0.5.29",
+  "version": "0.5.30",
   "type": "module",
   "module": "./dist/cli.mjs",
   "types": "./dist/cli.d.mts",
@@ -37,5 +37,18 @@
     "*.md",
     "dist/",
     "src/"
-  ]
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/plugjs/tsrun.git"
+  },
+  "keywords": [
+    "node",
+    "runtime",
+    "typescript"
+  ],
+  "bugs": {
+    "url": "https://github.com/plugjs/tsrun/issues"
+  },
+  "homepage": "https://github.com/plugjs/tsrun#readme"
 }
