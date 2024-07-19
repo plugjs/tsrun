@@ -13,7 +13,7 @@
     }
   },
   "bin": {
-    "tsrun": "./dist/tsrun.mjs"
+    "tsrun": "dist/tsrun.mjs"
   },
   "scripts": {
     "build": "./build.sh",
