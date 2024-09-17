@@ -21,7 +21,6 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noUncheckedIndexedAccess": true,
-    "verbatimModuleSyntax": true,
   },
   "include": [
     "src/*.mts",
