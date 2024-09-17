@@ -3,14 +3,14 @@ import _module from 'node:module'
 import _url from 'node:url'
 import _util from 'node:util'
 
-import _yargs from './parser.mjs'
+import { yargs } from './parser.mjs'
 
 /* ========================================================================== *
  * EXPORTS                                                                    *
  * ========================================================================== */
 
 /** Bundled-in `yargs-parser` */
-export const yargsParser = _yargs
+export const yargsParser = yargs
 
 /**
  * Wrap around the `main` process of a CLI.

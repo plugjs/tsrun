@@ -1,2 +1,2 @@
 import _yargs from 'yargs-parser'
-export default _yargs
+export const yargs = _yargs

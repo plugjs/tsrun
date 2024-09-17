@@ -17,6 +17,7 @@ tsc -p "./tsconfig-tsd.json"
 # Copy the "yargs-parser" types in our bundle
 echo -e '\033[38;5;69m*\033[0m Incorporating "yargs-parser" types...'
 cp "./node_modules/@types/yargs-parser/index.d.ts" "./dist/parser.d.mts"
+sed -i '' 's|export = yargsParser|export default yargsParser|g' "./dist/parser.d.mts"
 
 # Run ESLint on our sources
 echo -e '\033[38;5;69m*\033[0m Linting sources...'
@@ -32,7 +33,7 @@ esbuild \
 	--out-extension:.js=.mjs \
 	--external:esbuild \
 	--define:__version="'${VERSION}'" \
-  --sourcemap \
+	--sourcemap \
 	--bundle \
 		src/*.mts
 esbuild \
@@ -43,7 +44,7 @@ esbuild \
 	--out-extension:.js=.cjs \
 	--external:esbuild \
 	--define:__version="'${VERSION}'" \
-  --sourcemap \
+	--sourcemap \
 	--bundle \
 		src/*.cts
 
