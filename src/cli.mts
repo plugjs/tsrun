@@ -3,7 +3,7 @@ import _module from 'node:module'
 import _url from 'node:url'
 import _util from 'node:util'
 
-import { yargs } from './parser.mjs'
+import yargs from './parser.mjs'
 
 /* ========================================================================== *
  * EXPORTS                                                                    *
