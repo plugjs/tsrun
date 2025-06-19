@@ -1,6 +1,6 @@
 {
   "name": "@plugjs/tsrun",
-  "version": "0.5.81",
+  "version": "0.6.0",
   "type": "module",
   "module": "./dist/cli.mjs",
   "types": "./dist/cli.d.mts",
@@ -14,6 +14,9 @@
   },
   "bin": {
     "tsrun": "dist/tsrun.mjs"
+  },
+  "engines": {
+    "node": ">=20.0.0"
   },
   "scripts": {
     "build": "./build.sh",
