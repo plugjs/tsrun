@@ -117,7 +117,7 @@ export function moduleType(mode: Type): Type {
     }
 
     const parent = _path.dirname(directory)
-    if (directory !== parent) return _findType(directory)
+    if (directory !== parent) return _findType(parent)
 
     logMessage(mode, `Type defaulted to "${CJS}"`)
     return CJS
