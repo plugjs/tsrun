@@ -25,7 +25,7 @@ jobs:
 
       - name: Build Package
         run: |
-          npm clean-install
+          npm clean-install --ingnore-scripts
           npm run build
 
   publish:

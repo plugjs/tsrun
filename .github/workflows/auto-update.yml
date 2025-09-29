@@ -29,7 +29,7 @@ jobs:
 
           # If still here, just run a full package update and install dependencies
           rm -rf node-modules package-lock.json
-          npm install
+          npm install --ingnore-scripts
 
           # Build our package
           npm run build
