@@ -15,6 +15,8 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup NodeJS
         uses: actions/setup-node@v4
@@ -26,3 +28,24 @@ jobs:
         run: |
           npm clean-install --ingnore-scripts
           npm run build
+
+      - name: Send Email Notification
+        if: ${{ !success() }}
+        uses: dawidd6/action-send-mail@v6
+        with:
+          server_address: ${{ secrets.EMAIL_SERVER }}
+          username: ${{ secrets.EMAIL_USERNAME }}
+          password: ${{ secrets.EMAIL_PASSWORD }}
+          secure: true
+          convert_markdown: true
+          from: GitHub Actions <developers+github@juit.com>
+          to: Juit Developers <developers+github@juit.com>
+          subject: "[${{ job.status }}] ${{ github.workflow }} in ${{ github.repository }}"
+          body: |
+            The GitHub Action "${{ github.workflow }}" in repository "${{ github.repository }}" ${{ job.status == 'cancelled' && 'was canceled' || 'has failed' }}.
+
+            Build logs are available at ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          html_body: |
+            The GitHub Action **`${{ github.workflow }}`** in repository **`${{ github.repository }}`** ${{ job.status == 'cancelled' && 'was **canceled**' || 'has **failed**' }}.
+
+            Build logs are available _[here](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})_.

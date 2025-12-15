@@ -5,37 +5,16 @@ on:
     - cron: "0 2 * * 4"
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   auto-update:
-    runs-on: ubuntu-latest
     name: Automatic Updates
-
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.repo_token }}
-
-      - name: Setup NodeJS
-        uses: actions/setup-node@v4
-        with:
-          registry-url: https://registry.npmjs.org
-          node-version: 20
-
-      - name: Check and apply dependencies updates
-        run: |
-          # Check for updates, and exit script on error / no updates found
-          npx '@juit/check-updates' --bump || exit $(( $? == 255 ? 0 : $? ))
-
-          # If still here, just run a full package update and install dependencies
-          rm -rf node-modules package-lock.json
-          npm install --ingnore-scripts
-
-          # Build our package
-          npm run build
-
-          # Commit all changes and push them back to the repo
-          git config user.email 'developers@juit.com'
-          git config user.name 'Github Workflows'
-          git commit -a -m "Release for automatic updates $(date '+%Y-%m-%d %H:%M:%S')"
-          git push -u origin '${{ github.ref_name }}'
+    uses: juitnow/workflows-public/.github/workflows/auto-update.yml@main
+    secrets:
+      AUTO_UPDATES_APP_ID: ${{ secrets.AUTO_UPDATES_APP_ID }}
+      AUTO_UPDATES_APP_PRIVATE_KEY: ${{ secrets.AUTO_UPDATES_APP_PRIVATE_KEY }}
+      EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
+      EMAIL_SERVER: ${{ secrets.EMAIL_SERVER }}
+      EMAIL_USERNAME: ${{ secrets.EMAIL_USERNAME }}
