@@ -16,14 +16,14 @@ export const yargsParser = yargs
  * Wrap around the `main` process of a CLI.
  *
  * This function must be invoked with a script URL (the `import.meta.url`
- * variable of the script being executed) and a callback, which will be invoked
- * once the proper environment for TypeScript has been setup.
+ * variable of the script being executed or the path to the script as exposed by
+ * once the proper environment for TypeScript has been set up.
  *
  * The callback _might_ return a promise (can be asynchronous) which will be
  * awaited for potential rejections.
  */
 export function main(
-    scriptUrl: string,
+    scriptUrlOrPath: string,
     callback: (args: string[]) => void | Promise<void>,
 ): void {
   const require = _module.createRequire(import.meta.url)
@@ -101,7 +101,10 @@ export function main(
   }
 
   /* If TypeScript is not enabled, then we have to fork with the new execArgh! */
-  const script = _url.fileURLToPath(scriptUrl)
+  const script = scriptUrlOrPath.startsWith('file:/') ?
+    _url.fileURLToPath(scriptUrlOrPath) :
+    scriptUrlOrPath
+
   debug('Forking', process.execPath, ...process.execArgv, script, ...process.argv.slice(2))
   const child = _childProcess.fork(script, [ ...process.argv.slice(2) ], {
     stdio: [ 'inherit', 'inherit', 'inherit', 'ipc' ],
