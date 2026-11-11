@@ -11,92 +11,11 @@ import {
   moduleType,
 } from './loader-shared'
 
+import type { LoadFnOutput, LoadHookSync, ResolveFnOutput, ResolveHookSync } from 'node:module'
+
 /* ========================================================================== *
  * ESM VERSION                                                                *
  * ========================================================================== */
-
-/** The formats that can be handled by NodeJS' loader */
-type Format = 'builtin' | 'commonjs' | 'json' | 'module' | 'wasm'
-
-/* ========================================================================== */
-
-/** The type identifying a NodeJS' loader `resolve` hook. */
-type ResolveHook = (
-  /** Whatever was requested to be imported (module, relative file, ...). */
-  specifier: string,
-  /** Context information around this `resolve` hook call. */
-  context: ResolveContext,
-  /** The subsequent resolve hook in the chain, or the Node.js default one. */
-  nextResolve: ResolveNext,
-) => ResolveResult | Promise<ResolveResult>
-
-/** Context information around a `resolve` hook call. */
-interface ResolveContext {
-  importAssertions: object
-  /** Export conditions of the relevant `package.json`. */
-  conditions: string[]
-  /** The module importing this one, or undefined if this is the entry point. */
-  parentURL?: string | undefined
-}
-
-/** The subsequent resolve hook in the chain, or the Node.js default one. */
-type ResolveNext = (specifier: string, context: ResolveContext) => ResolveResult | Promise<ResolveResult>
-
-/** A type describing the required results from a `resolve` hook */
-interface ResolveResult {
-  /** The absolute URL to which this input resolves. */
-  url: string
-  /** A format hint to the `load` hook (it might be ignored). */
-  format?: Format | null | undefined
-  /** A signal that this hook intends to terminate the chain of resolve hooks. */
-  shortCircuit?: boolean | undefined
-}
-
-/* ========================================================================== */
-
-/** The type identifying a NodeJS' loader `load` hook. */
-type LoadHook = (
-  /** The URL returned by the resolve chain. */
-  url: string,
-  /** Context information around this `load` hook call. */
-  context: LoadContext,
-  /** The subsequent load hook in the chain, or the Node.js default one. */
-  nextLoad: LoadNext,
-) => LoadResult | Promise<LoadResult>
-
-/** Context information around a `load` hook call. */
-interface LoadContext {
-  importAssertions: object
-  /** Export conditions of the relevant `package.json` */
-  conditions: string[]
-  /** The format hint from the `resolve` hook. */
-  format?: ResolveResult['format']
-}
-
-/** The subsequent load hook in the chain, or the Node.js default one. */
-type LoadNext = (url: string, context: LoadContext) => LoadResult | Promise<LoadResult>
-
-/** A type describing the required results from a `resolve` hook */
-type LoadResult = {
-  /** The format of the code being loaded. */
-  format: Format
-  /** A signal that this hook intends to terminate the chain of load hooks. */
-  shortCircuit?: boolean | undefined
-} & ({
-  format: 'builtin' | 'commonjs'
-  /** When the source is `builtin` or `commonjs` no source must be returned */
-  source?: never | undefined
-} | {
-  format: 'json' | 'module'
-  /** When the source is `json` or `module` the source can include strings */
-  source: string | ArrayBuffer | NodeJS.TypedArray
-} | {
-  format: 'wasm'
-  /** When the source is `wasm` the source must not be a string */
-  source: ArrayBuffer | NodeJS.TypedArray
-})
-
-/* ========================================================================== */
 
 const _type = moduleType(CJS)
 
@@ -104,7 +23,7 @@ const _type = moduleType(CJS)
  * Our main `resolve` hook: here we need to check for a couple of options
  * when importing ""
  */
-export const resolve: ResolveHook = (specifier, context, nextResolve): ResolveResult | Promise<ResolveResult> => {
+export const resolve: ResolveHookSync = (specifier, context, nextResolve): ResolveFnOutput => {
   logMessage(ESM, `Resolving "${specifier}" from "${context.parentURL}"`)
 
   /* We only resolve relative paths ("./xxx" or "../xxx") */
@@ -185,7 +104,7 @@ export const resolve: ResolveHook = (specifier, context, nextResolve): ResolveRe
 }
 
 /** Our main `load` hook */
-export const load: LoadHook = (url, context, nextLoad): LoadResult | Promise<LoadResult> => {
+export const load: LoadHookSync = (url, context, nextLoad): LoadFnOutput => {
   logMessage(ESM, `Attempting to load "${url}"`)
 
   /* We only load from disk, so ignore everything else */
