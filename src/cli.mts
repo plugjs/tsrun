@@ -3,6 +3,7 @@ import _module from 'node:module'
 import _url from 'node:url'
 import _util from 'node:util'
 
+import { load, resolve } from './loader-module.mjs'
 import yargs from './parser.mjs'
 
 /* ========================================================================== *
@@ -49,11 +50,11 @@ export function main(
   let typeScriptEnabled = false
 
   /* If we have the "_module.register" hook in place we can work in-process */
-  if (typeof _module.register === 'function') {
+  if (typeof _module.registerHooks === 'function') {
     debug('Enabling in-process TypeScript loader')
 
     /* Register the ESM loader and immediately require the CJS loader */
-    _module.register('./loader-module.mjs', import.meta.url)
+    _module.registerHooks({ resolve, load })
     require('./loader-commonjs.cjs')
 
     /* Add our preloader to the "execArgv" arguments to support forking */

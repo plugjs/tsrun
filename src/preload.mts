@@ -1,5 +1,7 @@
-import { createRequire, register } from 'node:module'
+import { createRequire, registerHooks } from 'node:module'
+
+import { load, resolve } from './loader-module.mjs'
 
 process.setSourceMapsEnabled(true)
-register('./loader-module.mjs', import.meta.url)
+registerHooks({ resolve, load })
 createRequire(import.meta.url)('./loader-commonjs.cjs')

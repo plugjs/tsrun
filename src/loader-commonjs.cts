@@ -44,10 +44,9 @@ declare module 'node:module' {
 
 /* ========================================================================== */
 
-const _type = moduleType(CJS)
-
 const loader: ExtensionHandler = (module, filename): void => {
   logMessage(CJS, `Attempting to load "${filename}"`)
+  const type = moduleType(CJS, filename)
 
   /* Figure our the extension (".ts" or ".cts")... */
   const ext = _path.extname(filename)
@@ -55,7 +54,7 @@ const loader: ExtensionHandler = (module, filename): void => {
   /* If the file is a ".ts", we need to figure out the default type */
   if (ext === '.ts') {
     /* If the _default_ module type is CJS then load as such! */
-    if (_type === ESM) {
+    if (type === ESM) {
       throwError(CJS, `Must use import to load ES Module: ${filename}`, { code: 'ERR_REQUIRE_ESM' })
     }
   } else if (ext !== '.cts') {

@@ -47,10 +47,20 @@ _run "${BASE}.cts" ./test/test.cts || FAIL=1
 _run "${BASE}.cts" --force-esm ./test/test.cts || FAIL=1
 _run "${BASE}.cts" --force-cjs ./test/test.cts || FAIL=1
 
+echo -e '\033[38;5;69m*\033[0m Testing type from "package.json"...'
+_run "${PWD}/test/pkg/test.ts" ./test/pkg/test.ts || FAIL=1
+_run "${PWD}/test/pkg-cjs/test.ts" ./test/pkg-cjs/test.ts || FAIL=1
+_run "file://${PWD}/test/pkg-esm/test.ts" ./test/pkg-esm/test.ts || FAIL=1
+
+
 echo -e '\033[38;5;69m*\033[0m Testing forking scripts...'
 _run "file://${BASE}.ts" ./test/forking.ts || FAIL=1
 _run "file://${BASE}.ts" --force-esm ./test/forking.ts || FAIL=1
 _run "${BASE}.ts"        --force-cjs ./test/forking.ts || FAIL=1
+
+echo -e '\033[38;5;69m*\033[0m Testing repl...'
+echo 'import("./test/test.ts")' | ./dist/tsrun.mjs --force-esm > /dev/null 2>&1 || FAIL=1
+echo 'require("./test/test.ts")' | ./dist/tsrun.mjs --force-cjs > /dev/null 2>&1 || FAIL=1
 
 echo -e '\033[38;5;69m*\033[0m Testing failing scripts...'
 _run "" ./test/fail.ts 2>/dev/null || FAIL=1
