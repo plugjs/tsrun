@@ -47,6 +47,12 @@ _run "${BASE}.cts" ./test/test.cts || FAIL=1
 _run "${BASE}.cts" --force-esm ./test/test.cts || FAIL=1
 _run "${BASE}.cts" --force-cjs ./test/test.cts || FAIL=1
 
+echo -e '\033[38;5;69m*\033[0m Testing type from "package.json"...'
+_run "${PWD}/test/pkg/test.ts" ./test/pkg/test.ts || FAIL=1
+_run "${PWD}/test/pkg-cjs/test.ts" ./test/pkg-cjs/test.ts || FAIL=1
+_run "file://${PWD}/test/pkg-esm/test.ts" ./test/pkg-esm/test.ts || FAIL=1
+
+
 echo -e '\033[38;5;69m*\033[0m Testing forking scripts...'
 _run "file://${BASE}.ts" ./test/forking.ts || FAIL=1
 _run "file://${BASE}.ts" --force-esm ./test/forking.ts || FAIL=1
