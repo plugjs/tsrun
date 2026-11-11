@@ -17,8 +17,6 @@ import type { LoadFnOutput, LoadHookSync, ResolveFnOutput, ResolveHookSync } fro
  * ESM VERSION                                                                *
  * ========================================================================== */
 
-const _type = moduleType(CJS)
-
 /**
  * Our main `resolve` hook: here we need to check for a couple of options
  * when importing ""
@@ -126,10 +124,11 @@ export const load: LoadHookSync = (url, context, nextLoad): LoadFnOutput => {
 
   /* Convert the url into a file name, any error gets ignored */
   const filename = _url.fileURLToPath(url)
+  const type = moduleType(ESM, filename)
 
   /* If the file is a ".ts", we need to figure out the default type */
   if (ext === '.ts') {
-    if (_type === CJS) {
+    if (type === CJS) {
       logMessage(ESM, `Switching type from "module" to "commonjs" for "${url}"`)
       logMessage(ESM, 'Please note that named import WILL NOT WORK in this case, as Node.js performs a')
       logMessage(ESM, 'static analisys on the CommonJS source code, and this file is transpiled from.')
