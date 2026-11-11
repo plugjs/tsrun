@@ -45,7 +45,7 @@ export const ESM = 'module' as const
 const _debugLog = _util.debuglog('plug:ts-loader')
 const _debug = _debugLog.enabled
 
-/** Emit some logs if `DEBUG_TS_LOADER` is set to `true` */
+/** Emit some logs if `NODE_DEBUG` is set to `plug:ts-loader` */
 export function logMessage(mode: Type, arg: string, ...args: any []): void {
   if (! _debug) return
 
@@ -74,23 +74,29 @@ export function throwError(
  * MODULE TYPES AND FORCING TYPE                                              *
  * ========================================================================== */
 
+const typeCache = new Map<string, Type>()
+
 /**
  * Determine the current module type to transpile .TS files as looking at the
  * `__TS_LOADER_FORCE_TYPE` environment variable (used by PlugJS and CLI) or,
  * if unspecified, looking at the `type` field in the `package.json` file.
  */
-export function moduleType(mode: Type): Type {
+export function moduleType(from: Type, forFile: string): Type {
+  logMessage(from, `__TS_LOADER_FORCE_TYPE=${process.env.__TS_LOADER_FORCE_TYPE}`)
   if (process.env.__TS_LOADER_FORCE_TYPE) {
     const type = process.env.__TS_LOADER_FORCE_TYPE
     if ((type === CJS) || (type === ESM)) {
-      logMessage(mode, `Forcing type to "${type}" from environment`)
+      logMessage(from, `Forcing type to "${type}" from environment`)
       return type
     } else {
-      throwError(mode, `Invalid type "${process.env.__TS_LOADER_FORCE_TYPE}"`)
+      throwError(from, `Invalid type "${process.env.__TS_LOADER_FORCE_TYPE}"`)
     }
   }
 
   const _findType = (directory: string): Type => {
+    const cahed = typeCache.get(directory)
+    if (cahed) return cahed
+
     const packageFile = _path.join(directory, 'package.json')
     try {
       const packageData = _fs.readFileSync(packageFile, 'utf-8')
@@ -98,32 +104,36 @@ export function moduleType(mode: Type): Type {
       const packageType = packageJson.type
       switch (packageType) {
         case undefined:
-          logMessage(mode, `File "${packageFile}" does not declare a default type`)
+          logMessage(from, `File "${packageFile}" does not declare a default type`)
+          typeCache.set(directory, CJS)
           return CJS
 
         case CJS:
         case ESM:
-          logMessage(mode, `File "${packageFile}" declares type as "${CJS}"`)
+          logMessage(from, `File "${packageFile}" declares type as "${CJS}"`)
+          typeCache.set(directory, packageType)
           return packageType
 
         default:
-          logMessage(mode, `File "${packageFile}" specifies unknown type "${packageType}"`)
+          logMessage(from, `File "${packageFile}" specifies unknown type "${packageType}"`)
+          typeCache.set(directory, CJS)
           return CJS
       }
     } catch (cause: any) {
       if ((cause.code !== 'ENOENT') && (cause.code !== 'EISDIR')) {
-        throwError(mode, `Unable to read or parse "${packageFile}"`, { cause, start: _findType })
+        throwError(from, `Unable to read or parse "${packageFile}"`, { cause, start: _findType })
       }
     }
 
     const parent = _path.dirname(directory)
     if (directory !== parent) return _findType(parent)
 
-    logMessage(mode, `Type defaulted to "${CJS}"`)
+    logMessage(from, `Type defaulted to "${CJS}"`)
+    typeCache.set(directory, CJS)
     return CJS
   }
 
-  return _findType(process.cwd())
+  return _findType(_path.dirname(forFile))
 }
 
 /* ========================================================================== *
